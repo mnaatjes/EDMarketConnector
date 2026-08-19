@@ -1,7 +1,7 @@
 # Directives and Context for `/root/docs` directory
 
 This document defines the structural directives and context guidelines for homelab system documentation. For historical updates and completed milestones, refer to the [Documentation Changelog](file:///root/docs/CHANGELOG.md).
-Test
+Testing testing 1.. 2... 3
 ---
 ## 1. Purpose and Structure
 
