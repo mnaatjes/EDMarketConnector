@@ -21,7 +21,7 @@ All documentation files under `docs/` must be structured into the following Diat
 * **`docs/tutorials/`**: Guided learning pathways for beginners.
 * **`docs/how-to/`**: Practical, step-by-step guides to solve specific tasks or execute runbooks.
 * **`docs/reference/`**: Technical descriptions, architecture specifications, schemas, standards, and codebase maps generated during the audit.
-* **`docs/explanation/`**: High-level background concepts, design rationales, architectural critiques, and Architectural Decision Records (ADRs).
+* **`docs/explanation/`**: High-level background concepts, design rationales, architectural critiques, and Architectural Decision Records (ADRs). All ADRs must follow the format and rules defined in the global [ADR Authoring Standards](file:///home/michael/.gemini/config/adr_authoring.md).
 
 ## 3. Metadata Frontmatter Syntax
 All documentation pages must include the following YAML frontmatter metadata format at the top of the file:
