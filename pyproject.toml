@@ -63,8 +63,8 @@ legacy-dev = [
 max_line_length = 120
 
 [tool.pytest.ini_options]
-testpaths = ["tests"] # Search for tests in tests/
-addopts = "--cov . --cov plugins --cov-report=term-missing --no-cov-on-fail"
+testpaths = ["tests/unit", "tests/integration"] # Search for tests in tests/unit and tests/integration
+addopts = "--cov src --cov plugins --cov-report=term-missing --no-cov-on-fail"
 # --cov-fail-under 80"
 
 [tool.coverage.run]
