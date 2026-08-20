@@ -71,3 +71,17 @@ Automatic discovery of the journal directory on Linux is prone to failure due to
 
 * **Binary Unbuffered Reading:** EDMC opens log files in unbuffered binary read-only mode (`open(logfile, 'rb', 0)`). This prevents text-mode newlines or write-buffering from causing read failures when the game is writing to the same file.
 * **Byte Offset Tailing:** At startup, the parser reads all lines in the newest log file to catch up. Once it reaches the end, it records the byte position using `loghandle.tell()` and transitions to polling mode, periodically seeking to the offset to check for new data.
+
+---
+
+## 6. Journal State Snapshots
+
+Unlike the append-only `Journal.*.log` files, the following files are rewritten in-place (completely overwritten) in the same directory by the game client:
+
+* **`Status.json`:** Contains frequently-changing cockpit GUI status flags, system indicators, and user controls. Updated in real-time as state modifications occur.
+* **`Market.json`:** Contains commodity price sheets and demand data. Generated when the player interacts with a station's commodities interface.
+* **`Outfitting.json`:** Contains the list of outfitting modules and prices available at the station. Generated when the player opens the outfitting interface.
+* **`Shipyard.json`:** Contains the list of purchaseable ships and prices available at the station. Generated when the shipyard interface is accessed.
+* **`Cargo.json`:** Tracks the player's active ship cargo inventory. Updated when cargo items are collected, consumed, or sold.
+* **`ShipLocker.json` / `Backpack.json`:** Tracks Odyssey micro-resources and inventory contents.
+* **`NavRoute.json`:** Stores plotted navigation routes and jump targets. Updated when a route is recalculated.

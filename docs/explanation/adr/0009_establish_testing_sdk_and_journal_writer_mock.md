@@ -49,6 +49,10 @@ We will establish a public testing SDK package under `src/edmc/testing/` contain
   * `write_event(event_name: str, payload: dict)`: Appends a specific JSON event line to the active file.
   * `rotate_log()`: Simulates restarting the game client by closing the current file and opening a new sequential timestamped log file.
   * `stop_game()`: Writes a `Shutdown` event and closes the file handle.
+* **Journal State Snapshots Integration:**
+  * The mock writer will support writing the transient JSON state files (such as `Market.json` and `Status.json`) as categorized in the [Journal v37 Reference Specification: Section 6](file:///home/michael/src/github.com/mnaatjes/EDMarketConnector/docs/reference/journal/v37/specification.md#6-journal-state-snapshots).
+  * **Dual-Write Helpers:** It will provide compound mock actions like `trigger_market_visit(market_id, commodities_data)` which automatically write the marker event in `Journal.*.log` and concurrently overwrite the companion `Market.json` file in-place, simulating the game's actual filesystem operations.
+  * **Cleanup:** When `stop_game()` is called, all transient snapshot `*.json` files will be pruned from the workspace.
 
 ### 5.2 Exposing Supported Journal Version
 To inform developers and users of the active Journal version compatibility:
