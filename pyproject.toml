@@ -43,7 +43,8 @@ dev = [
     "pytest==9.0.3",
     "pytest-cov==7.0.0",
     "coverage[toml]==7.13.1",
-    "coverage-conditional-plugin==0.9.0"
+    "coverage-conditional-plugin==0.9.0",
+    "ruff"
 ]
 review = [
     "radon",
@@ -76,3 +77,7 @@ sys-platform-not-darwin = "sys_platform == 'darwin'"
 sys-platform-linux = "sys_platform != 'linux'"
 sys-platform-not-linux = "sys_platform == 'linux'"
 sys-platform-not-known = "sys_platform in ('darwin', 'linux', 'win32')"
+
+[tool.ruff]
+line-length = 120
+lint.select = ["E", "F", "I", "N"]
