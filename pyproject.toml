@@ -1,6 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edmarketconnector"
+version = "5.0.0"
+description = "Elite Dangerous Market Connector"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-2.0" }
+dependencies = [
+    "requests==2.33.0",
+    "pillow==12.3.0",
+    "watchdog==6.0.0",
+    "semantic-version==2.10.0",
+    "psutil==7.2.1",
+    "tomli-w==1.2.0",
+    "simplesystray==0.1.0; sys_platform == 'win32'",
+    "pywin32==311; sys_platform == 'win32'"
+]
+
+[project.optional-dependencies]
+review = [
+    "radon",
+    "vulture",
+    "pydeps",
+    "pylint"
+]
+
 [tool.autopep8]
 max_line_length = 120
-
 
 [tool.pytest.ini_options]
 testpaths = ["tests"] # Search for tests in tests/

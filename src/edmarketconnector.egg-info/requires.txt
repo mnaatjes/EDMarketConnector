@@ -1,0 +1,16 @@
+requests==2.33.0
+pillow==12.3.0
+watchdog==6.0.0
+semantic-version==2.10.0
+psutil==7.2.1
+tomli-w==1.2.0
+
+[:sys_platform == "win32"]
+simplesystray==0.1.0
+pywin32==311
+
+[review]
+radon
+vulture
+pydeps
+pylint

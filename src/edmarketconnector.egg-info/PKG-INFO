@@ -1,3 +1,26 @@
+Metadata-Version: 2.4
+Name: edmarketconnector
+Version: 5.0.0
+Summary: Elite Dangerous Market Connector
+License: GPL-2.0
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests==2.33.0
+Requires-Dist: pillow==12.3.0
+Requires-Dist: watchdog==6.0.0
+Requires-Dist: semantic-version==2.10.0
+Requires-Dist: psutil==7.2.1
+Requires-Dist: tomli-w==1.2.0
+Requires-Dist: simplesystray==0.1.0; sys_platform == "win32"
+Requires-Dist: pywin32==311; sys_platform == "win32"
+Provides-Extra: review
+Requires-Dist: radon; extra == "review"
+Requires-Dist: vulture; extra == "review"
+Requires-Dist: pydeps; extra == "review"
+Requires-Dist: pylint; extra == "review"
+Dynamic: license-file
+
 # Elite: Dangerous Market Connector (EDMC) - Fork & Refactor Project
 
 This repository is a fork of the official Elite: Dangerous Market Connector (EDMC). It is dedicated to auditing the codebase, mapping its architecture, and systematically refactoring it into a clean, modern, and modularized layout.
