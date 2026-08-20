@@ -1,6 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edmarketconnector"
+version = "5.0.0"
+description = "Elite Dangerous Market Connector"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-2.0" }
+dependencies = [
+    "requests==2.33.0",
+    "pillow==12.3.0",
+    "watchdog==6.0.0",
+    "semantic-version==2.10.0",
+    "psutil==7.2.1",
+    "tomli-w==1.2.0",
+    "simplesystray==0.1.0; sys_platform == 'win32'",
+    "pywin32==311; sys_platform == 'win32'"
+]
+
+[project.optional-dependencies]
+dev = [
+    "setuptools==83.0.0",
+    "flake8==7.3.0",
+    "flake8-annotations-coverage==0.0.6",
+    "flake8-cognitive-complexity==0.1.0",
+    "flake8-comprehensions==3.17.0",
+    "flake8-docstrings==1.7.0",
+    "flake8-json==24.4.0",
+    "flake8-noqa==1.4.0",
+    "flake8-use-fstring==1.4",
+    "mypy==1.19.1",
+    "pep8-naming==0.15.1",
+    "safety==3.7.0",
+    "types-requests==2.32.4.20250913",
+    "types-setuptools==80.9.0.20251223",
+    "autopep8==2.3.2",
+    "pre-commit==4.5.1",
+    "mistune==3.3.0",
+    "py2exe==0.14.0.0; sys_platform == 'win32'",
+    "pytest==9.0.3",
+    "pytest-cov==7.0.0",
+    "coverage[toml]==7.13.1",
+    "coverage-conditional-plugin==0.9.0",
+    "ruff"
+]
+review = [
+    "radon",
+    "vulture",
+    "pydeps",
+    "pylint"
+]
+
 [tool.autopep8]
 max_line_length = 120
-
 
 [tool.pytest.ini_options]
 testpaths = ["tests"] # Search for tests in tests/
@@ -23,3 +77,7 @@ sys-platform-not-darwin = "sys_platform == 'darwin'"
 sys-platform-linux = "sys_platform != 'linux'"
 sys-platform-not-linux = "sys_platform == 'linux'"
 sys-platform-not-known = "sys_platform in ('darwin', 'linux', 'win32')"
+
+[tool.ruff]
+line-length = 120
+lint.select = ["E", "F", "I", "N"]
