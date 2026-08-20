@@ -44,7 +44,10 @@ To achieve deterministic testing from simple file detection up to granular JSON 
 * *Due to these path variations, automatic Linux path discovery is highly unreliable, reinforcing the requirement to maintain manual settings fallbacks.*
 
 ### 4.4 Official API Manual Specifications
-* Frontier Developments officially publishes and updates the [Elite Dangerous Player Journal Manual](https://forums.frontier.co.uk/threads/elite-dangerous-player-journal-v37-specifications-released-for-update-14.611171/) detailing the exact JSON schemas and event specifications for third-party developers.
+* **Target Specification:** We will target and adhere to **Player Journal v37** (which maps to Elite Dangerous Odyssey up to Update 14, released May 2023).
+* **Proof of Specification Validity:**
+  * Community-maintained reference specifications, such as the [Elite Dangerous Player Journal Manual v37](https://elite-journal.readthedocs.io/en/latest/), and Frontier's live-updating endpoint at `https://hosting.zaonce.net/manual/Elite_Dangerous_Player_Journal.json` establish v37 as the active baseline.
+  * While content updates in 2025/2026 (including the System Colonization, Powerplay 2.0, and Kestrel/Highliner updates) have introduced new data fields and events, Frontier appends these keys dynamically to the v37 schema rather than incrementing the major journal version. v37 remains the primary schema base.
 
 ### 4.5 Game Journal Writing Rules
 * **File Naming Format:** Files are generated at game launch using the format:
@@ -73,6 +76,12 @@ We will establish a public testing SDK package under `src/edmc/testing/` contain
   * `write_event(event_name: str, payload: dict)`: Appends a specific JSON event line to the active file.
   * `rotate_log()`: Simulates restarting the game client by closing the current file and opening a new sequential timestamped log file.
   * `stop_game()`: Writes a `Shutdown` event and closes the file handle.
+
+### 5.2 Exposing Supported Journal Version
+To inform developers and users of the active Journal version compatibility:
+1. **Repository Main README:** We will add a "Compatibility & Specifications" section in the root `README.md` explicitly stating the supported Journal specification (e.g. v37) and game version compatibility.
+2. **Testing Package Facade:** We will declare a package-level variable `__journal_version__ = "37"` inside the public gateway `src/edmc/testing/__init__.py` and document the API coverage inside the package docstrings.
+3. **Changelog Releases:** Any subsequent changes or incremental key additions to our parsed event models will be logged as milestones under `CHANGELOG.md` with explicit version numbers.
 
 ---
 
