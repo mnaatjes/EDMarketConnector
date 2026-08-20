@@ -20,7 +20,27 @@ The work in this repository is currently focused on an **In-Repository Audit** t
 
 ---
 
-## 2. Legacy EDMarketConnector Project Description
+## 2. Target Architecture (Ports & Adapters / Hexagonal)
+
+To decouple the codebase, we are restructuring the application into a **Ports & Adapters (Hexagonal)** layout under the `src/` directory.
+
+### Directory Geography:
+```text
+src/
+└── edmc/
+    ├── core/            # System hub, Event Broker, Bootstrapper, and Dependency Injection container.
+    ├── domain/          # Pure, dependency-free domain models (e.g. JournalEvent, CmdrState).
+    ├── ingestion/       # Driving Adapters (File Watcher, Log Line Tailer, JSON Parser).
+    ├── egress/          # Driven Adapters (Inara, EDSM, EDDN HTTP/ZMQ API clients).
+    └── ui/              # User Interface Adapter (Tkinter GUI windows and menus).
+```
+
+* **Core Domain (`core/`, `domain/`):** Contains the business rules and event orchestration. It has no dependencies on external frameworks, networking libraries (`requests`), or graphics engines (`tkinter`).
+* **Adapters (`ingestion/`, `egress/`, `ui/`):** Implement the specific interfaces (ports) to interact with external systems (filesystems, network APIs, displays). They only communicate with each other via the core Event Broker.
+
+---
+
+## 3. Legacy EDMarketConnector Project Description
 
 *Below is the original documentation for the Elite: Dangerous Market Connector project.*
 

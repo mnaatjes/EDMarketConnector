@@ -48,6 +48,7 @@ To modularize and modernize the EDMarketConnector codebase, all refactoring work
 4. **Decouple Business Logic:** Isolate core data transformations, log parsing rules, and mathematical operations from infrastructural dependencies like local filesystems or remote servers.
 5. **Decouple Presentation Layer (GUI):** Keep the Tkinter interface clean of business processing. The GUI should communicate solely via event dispatchers or injected controllers, allowing the application to run headlessly.
 6. **Domain-Driven Design (DDD) & Event Sourcing:** Represent Journal telemetry events as structured, immutable domain models that are processed and dispatched as event streams to API consumers.
+7. **Ports & Adapters (Hexagonal) Architecture:** Segregate the codebase into a dependency-free Core Domain (core/, domain/) and external, pluggable Adapters (ingestion/, egress/, ui/). Direct dependencies between adapters are strictly forbidden; communication must pass through abstract ports defined in the core.
 
 ---
 
