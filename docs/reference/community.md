@@ -42,6 +42,14 @@ This reference document catalogues key open-source repositories, schemas, and pa
   * **Content Definitions:** Schemas strictly define type constraints (e.g. integer, string, boolean), declare mandatory fields via `required`, and disable unknown keys via `additionalProperties: false`.
   * **Mock Value Utility:** Every schema includes an `"examples"` key-value array showing authentic values (e.g. game build strings like `"r282108/r0 "`). The `MockValueGenerator` should read these arrays to populate properties with authentic values.
 
+### Elite Dangerous Player Journal Manual (Lombra)
+* **Description:** The primary community-maintained documentation and API reference guide covering files, startup processes, telemetry events, and companion state snapshots.
+* **Web Manual Link:** [Elite Dangerous Player Journal Manual](https://elite-journal.readthedocs.io/en/latest/)
+* **Reference Link:** [Lombra/elite-api-docs GitHub Repository](https://github.com/Lombra/elite-api-docs.git)
+* **Pinpoint Specifications & Findings:**
+  * **Document Sources:** The repository contains the raw source files (such as `File Format.md`, `Status File.md`, and `Station Services.md`) used to render the documentation.
+  * **Status.json Bitmasks:** The [Status File.md](file:///home/michael/src/github.com/Lombra/elite-api-docs/docs/Status%20File.md) source details the exact bitwise mappings for `Flags` (bits 0 to 31, e.g. Bit 0 for `Docked`, Bit 4 for `Supercruise`) and `Flags2` (foot states like `OnFoot`, `LowOxygen`), which are critical for developing our status domain parser.
+
 ---
 
 ## 2. Parsing and Type Definition Libraries
