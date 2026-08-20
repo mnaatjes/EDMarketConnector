@@ -26,49 +26,15 @@ To achieve deterministic testing from simple file detection up to granular JSON 
 
 ## 4. Evidence & Research Findings
 
-### 4.1 Operating System Journal Paths
-* **Windows (Native):** Elite Dangerous defaults to writing logs inside the Windows "Saved Games" directory (resolved via Windows shell API `FOLDERID_SavedGames`):
-  `C:\Users\<Username>\Saved Games\Frontier Developments\Elite Dangerous\`
-* **Linux (Proton/Steam):** The game runs under Proton, which creates a separate virtual Windows directory prefix for each game. The path varies based on the Steam library location, typically resolved to:
-  `~/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/`
+Detailed system path specifications, directory discovery algorithms, symbolic redirection details, Linux Proton edge cases, file format definitions, local game client test logs, and target specifications are fully documented in the [Journal v37 Reference Specification](file:///home/michael/src/github.com/mnaatjes/EDMarketConnector/docs/reference/journal/v37/specification.md).
 
-### 4.2 Rigid Pathing and Redirections
-* **No Native Configuration:** The Elite Dangerous game client hardcodes the relative path and does *not* support altering the directory via configuration files (e.g., `AppConfig.xml` cannot change this target path).
-* **Symbolic Link Workarounds:** Players wishing to move the directory to another drive or cloud folder must use OS-level Symbolic Links (`mklink /D` on Windows or `ln -s` on Linux).
-* **EDMC Custom Folder Settings:** EDMC allows overriding the default discovery path via the `journaldir` parameter inside the user configurations.
-
-### 4.3 Linux/Proton Pathing Edge Cases
-* **Flatpak Steam Installs:** Isolates the system directories, shifting paths to sandboxed containers: `~/.var/app/com.valvesoftware.Steam/.local/share/Steam/...`
-* **Custom Steam Libraries:** If the game is installed on a secondary drive library folder, the Proton prefix (`compatdata/359320/`) resides on that drive's library path instead of the home directory.
-* **Standalone / Wine Launchers:** Non-Steam standalone setups running via Lutris or custom Wine prefixes map virtual drives to arbitrary user folders (e.g., `~/Games/elite-dangerous/drive_c/...`).
-* *Due to these path variations, automatic Linux path discovery is highly unreliable, reinforcing the requirement to maintain manual settings fallbacks.*
-
-### 4.4 Official API Manual Specifications
-* **Target Specification:** We will target and adhere to **Player Journal v37** (which maps to Elite Dangerous Odyssey up to Update 14, released May 2023).
-* **Proof of Specification Validity:**
-  * Community-maintained reference specifications, such as the [Elite Dangerous Player Journal Manual v37](https://elite-journal.readthedocs.io/en/latest/), and Frontier's live-updating endpoint at `https://hosting.zaonce.net/manual/Elite_Dangerous_Player_Journal.json` establish v37 as the active baseline.
-  * While content updates in 2025/2026 (including the System Colonization, Powerplay 2.0, and Kestrel/Highliner updates) have introduced new data fields and events, Frontier appends these keys dynamically to the v37 schema rather than incrementing the major journal version. v37 remains the primary schema base.
-* **Local Environment Verification:**
-  * Analysis of active log files generated under this system's Steam Proton prefix confirms the game version is currently executing on client version **`4.4.0.3` (Odyssey Live)**.
-  * The first event recorded in the local log files reads:
-    `{ "timestamp":"2026-08-14T03:29:39Z", "event":"Fileheader", "part":1, "language":"English/UK", "Odyssey":true, "gameversion":"4.4.0.3", "build":"r330683/r0 " }`
-  * This confirms the active local game client matches the Odyssey `4.4.x.x` runtime profile and adheres to the v37 JSONL schema structure.
-* **Refactoring Declaration:**
-  * We declare that our testing SDK and the rest of our refactored EDMC codebase will be designed and built around this most recent/current game client version (`gameversion: 4.4.x.x`, `Odyssey: true`) and its associated v37 journal file schema as the baseline.
-
-### 4.5 Game Journal Writing Rules
-* **File Naming Format:** Files are generated at game launch using the format:
-  `Journal.YYYY-MM-DDTHHMMSS.NN.log` (e.g. `Journal.2026-08-19T210000.01.log`).
-* **Format Structure:** The files are structured as **JSON Lines (JSONL)**. Each line is a single, independent UTF-8 JSON object terminated by `\n` or `\r\n`.
-* **Execution Sequence:**
-  1. The game creates a new file at startup and writes a `Fileheader` event.
-  2. It writes environment events (`Language`, `Commander`, `LoadGame`, `Rank`).
-  3. During gameplay, events are appended in real-time as actions occur (e.g. `FSDJump`, `Docked`).
-  4. At exit, it appends a `Shutdown` event and closes the file handle.
-
-### 4.6 Ingest Tailer Behavior (How EDMC Reads Logs)
-* **Binary Unbuffered Reading:** EDMC opens log files in unbuffered binary read-only mode (`open(logfile, 'rb', 0)`). This prevents text-mode newlines or write-buffering from causing read failures when the game is writing to the same file.
-* **Byte Offset Tailing:** At startup, the parser reads all lines in the newest log file to catch up. Once it reaches the end, it records the byte position using `loghandle.tell()` and transitions to polling mode, periodically seeking to the offset to check for new data.
+### 4.1 Summary of Key Specs (from Reference)
+* **Default Directory Paths:**
+  * **Windows:** `%USERPROFILE%\Saved Games\Frontier Developments\Elite Dangerous\`
+  * **Linux (Steam/Proton):** `~/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/`
+* **Target Schema:** Adhere to Player Journal v37 (verified locally on live game client version `4.4.0.3` Odyssey Live).
+* **Ingestion Method:** Binary unbuffered file tailing (`'rb', 0`) tracking byte offsets.
+* **Rigid Pathing:** The directory cannot be configured inside the game; it must be relocated via OS-level symbolic links or custom configurations (`journaldir` override).
 
 ---
 
