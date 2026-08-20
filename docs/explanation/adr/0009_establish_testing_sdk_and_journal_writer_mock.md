@@ -30,10 +30,23 @@ To achieve deterministic testing from simple file detection up to granular JSON 
 * **Windows (Native):** Elite Dangerous defaults to writing logs inside the Windows "Saved Games" directory (resolved via Windows shell API `FOLDERID_SavedGames`):
   `C:\Users\<Username>\Saved Games\Frontier Developments\Elite Dangerous\`
 * **Linux (Proton/Steam):** The game runs under Proton, which creates a separate virtual Windows directory prefix for each game. The path varies based on the Steam library location, typically resolved to:
-  `~/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/AppData/Local/Frontier Developments/Elite Dangerous/`
-  *Due to this variability, Linux users must manually configure their directory path, which defaults to None at bootstrap.*
+  `~/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/`
 
-### 4.2 Game Journal Writing Rules
+### 4.2 Rigid Pathing and Redirections
+* **No Native Configuration:** The Elite Dangerous game client hardcodes the relative path and does *not* support altering the directory via configuration files (e.g., `AppConfig.xml` cannot change this target path).
+* **Symbolic Link Workarounds:** Players wishing to move the directory to another drive or cloud folder must use OS-level Symbolic Links (`mklink /D` on Windows or `ln -s` on Linux).
+* **EDMC Custom Folder Settings:** EDMC allows overriding the default discovery path via the `journaldir` parameter inside the user configurations.
+
+### 4.3 Linux/Proton Pathing Edge Cases
+* **Flatpak Steam Installs:** Isolates the system directories, shifting paths to sandboxed containers: `~/.var/app/com.valvesoftware.Steam/.local/share/Steam/...`
+* **Custom Steam Libraries:** If the game is installed on a secondary drive library folder, the Proton prefix (`compatdata/359320/`) resides on that drive's library path instead of the home directory.
+* **Standalone / Wine Launchers:** Non-Steam standalone setups running via Lutris or custom Wine prefixes map virtual drives to arbitrary user folders (e.g., `~/Games/elite-dangerous/drive_c/...`).
+* *Due to these path variations, automatic Linux path discovery is highly unreliable, reinforcing the requirement to maintain manual settings fallbacks.*
+
+### 4.4 Official API Manual Specifications
+* Frontier Developments officially publishes and updates the [Elite Dangerous Player Journal Manual](https://forums.frontier.co.uk/threads/elite-dangerous-player-journal-v37-specifications-released-for-update-14.611171/) detailing the exact JSON schemas and event specifications for third-party developers.
+
+### 4.5 Game Journal Writing Rules
 * **File Naming Format:** Files are generated at game launch using the format:
   `Journal.YYYY-MM-DDTHHMMSS.NN.log` (e.g. `Journal.2026-08-19T210000.01.log`).
 * **Format Structure:** The files are structured as **JSON Lines (JSONL)**. Each line is a single, independent UTF-8 JSON object terminated by `\n` or `\r\n`.
@@ -43,7 +56,7 @@ To achieve deterministic testing from simple file detection up to granular JSON 
   3. During gameplay, events are appended in real-time as actions occur (e.g. `FSDJump`, `Docked`).
   4. At exit, it appends a `Shutdown` event and closes the file handle.
 
-### 4.3 Ingest Tailer Behavior (How EDMC Reads Logs)
+### 4.6 Ingest Tailer Behavior (How EDMC Reads Logs)
 * **Binary Unbuffered Reading:** EDMC opens log files in unbuffered binary read-only mode (`open(logfile, 'rb', 0)`). This prevents text-mode newlines or write-buffering from causing read failures when the game is writing to the same file.
 * **Byte Offset Tailing:** At startup, the parser reads all lines in the newest log file to catch up. Once it reaches the end, it records the byte position using `loghandle.tell()` and transitions to polling mode, periodically seeking to the offset to check for new data.
 
