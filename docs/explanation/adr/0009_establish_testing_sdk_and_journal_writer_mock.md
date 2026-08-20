@@ -48,6 +48,13 @@ To achieve deterministic testing from simple file detection up to granular JSON 
 * **Proof of Specification Validity:**
   * Community-maintained reference specifications, such as the [Elite Dangerous Player Journal Manual v37](https://elite-journal.readthedocs.io/en/latest/), and Frontier's live-updating endpoint at `https://hosting.zaonce.net/manual/Elite_Dangerous_Player_Journal.json` establish v37 as the active baseline.
   * While content updates in 2025/2026 (including the System Colonization, Powerplay 2.0, and Kestrel/Highliner updates) have introduced new data fields and events, Frontier appends these keys dynamically to the v37 schema rather than incrementing the major journal version. v37 remains the primary schema base.
+* **Local Environment Verification:**
+  * Analysis of active log files generated under this system's Steam Proton prefix confirms the game version is currently executing on client version **`4.4.0.3` (Odyssey Live)**.
+  * The first event recorded in the local log files reads:
+    `{ "timestamp":"2026-08-14T03:29:39Z", "event":"Fileheader", "part":1, "language":"English/UK", "Odyssey":true, "gameversion":"4.4.0.3", "build":"r330683/r0 " }`
+  * This confirms the active local game client matches the Odyssey `4.4.x.x` runtime profile and adheres to the v37 JSONL schema structure.
+* **Refactoring Declaration:**
+  * We declare that our testing SDK and the rest of our refactored EDMC codebase will be designed and built around this most recent/current game client version (`gameversion: 4.4.x.x`, `Odyssey: true`) and its associated v37 journal file schema as the baseline.
 
 ### 4.5 Game Journal Writing Rules
 * **File Naming Format:** Files are generated at game launch using the format:
