@@ -83,13 +83,15 @@ src/edmc/
 * **Lenient Mode (Production/Run Pipeline):** During live gameplay execution, the telemetry ingestion pipeline runs the validator in warning-only mode. If the game client writes an unexpected key or changes a type signature, EDMC will log a warning to the diagnostic files but continue parsing and transmitting the remaining valid telemetry payload.
 
 ### 4.4 Sources for Raw Baseline Test Articles
-To obtain unaltered, genuine logs and JSS companion files for local staging (`data/raw/`):
-1. **Local System Installation:** Copy files directly from the game client's active directory. On Linux, this resides in:
-   `~/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/`
-2. **EDDiscovery GitHub Repository:** Contains a suite of real player logs representing complex gameplay scenarios:
-   * [EDDiscovery GitHub Repository](https://github.com/EDDiscovery/EDDiscovery) (Search in `EDDiscoveryTests/` or test folders).
-3. **EDCD EDDI GitHub Repository:** Contains test logs and snapshot assets:
-   * [EDCD EDDI GitHub Repository](https://github.com/EDCD/EDDI) (Search in the `Tests/` directory).
+To obtain unaltered, genuine logs and JSS companion files, we will rely exclusively on the developer's local game installation:
+* **Local System Source:** Copy files directly from the active game client's saved games folder. On Linux (Steam/Proton), this resides in:
+  `~/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/`
+
+### 4.5 Local ETL & Sanitization Pipeline
+To securely migrate these local logs to the git-tracked test suites:
+1. **Extract:** A local python script copies raw files from the system's game folder into the git-ignored staging area `data/raw/`.
+2. **Transform (Sanitize):** The script parses each log line and snapshot JSON object in staging, stripping out sensitive identifiers (such as CMDR Name, FID, and Credits) and replacing them with standardized test values.
+3. **Load:** The sanitized, anonymous files are written to `/tests/data/v37/` to serve as baseline test fixtures.
 
 ---
 
