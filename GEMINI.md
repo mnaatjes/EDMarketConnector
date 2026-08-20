@@ -40,6 +40,15 @@ Systematic review of the existing codebase requires analysis and visualization t
 * `radon` for code complexity metrics and maintainability indexes.
 * `vulture` for identifying dead or unused code paths.
 
+## 5. Architectural Directives
+To modularize and modernize the EDMarketConnector codebase, all refactoring work must adhere to the following design directives:
+1. **Single Responsibility Principle (SRP):** Each module or class must focus on one isolated concern (e.g., separating journal file parsing from network request handling) to limit the ripple effects of code changes.
+2. **Inversion of Control (IoC):** Dependencies (such as platform configurations) must be injected into components dynamically rather than hardcoding static imports, eliminating circular dependencies.
+3. **Ensure Maintainability and Scalability:** Write clean module interfaces with decoupled boundaries, making it simple to write isolated unit tests and add new features.
+4. **Decouple Business Logic:** Isolate core data transformations, log parsing rules, and mathematical operations from infrastructural dependencies like local filesystems or remote servers.
+5. **Decouple Presentation Layer (GUI):** Keep the Tkinter interface clean of business processing. The GUI should communicate solely via event dispatchers or injected controllers, allowing the application to run headlessly.
+6. **Domain-Driven Design (DDD) & Event Sourcing:** Represent Journal telemetry events as structured, immutable domain models that are processed and dispatched as event streams to API consumers.
+
 ---
 
 **Active Conversation UUID**: 854aafe7-4a26-4761-b59b-074b9c871b80
