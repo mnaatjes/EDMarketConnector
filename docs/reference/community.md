@@ -32,6 +32,16 @@ This reference document catalogues key open-source repositories, schemas, and pa
     * In `FSDJump`: strip `Wanted`, `BoostUsed`, `FuelLevel`, `FuelUsed`, `JumpDist`, and player-faction reputations (`MyReputation`, `SquadronFaction`, etc.).
     * In `Location`: strip `Wanted`, `Latitude`, `Longitude`, and player-faction reputations.
 
+### ED Journal Schemas (jixxed)
+* **Description:** A comprehensive community compiler hosting JSON Schemas for every individual Elite Dangerous Player Journal event type. This is extremely useful for structured schema validation and testing.
+* **Web Directory Link:** [ED Journal Schemas Web Directory](https://schemas.edomh.nl/)
+* **Reference Link:** [jixxed/ed-journal-schemas GitHub Repository](https://github.com/jixxed/ed-journal-schemas)
+* **Pinpoint Specifications & Findings:**
+  * **Structure:** Contains 274 subdirectories, with each directory housing a dedicated JSON Schema file (adhering to Draft 2020-12) for a specific game event or JSS companion file (such as `Fileheader`, `Status`, `Market`, `Cargo`).
+  * **Inheritance:** All schemas inherit from a parent `/schemas/_Event.json` definition, which enforces the baseline properties: `timestamp` (date-time format) and `event` (string name).
+  * **Content Definitions:** Schemas strictly define type constraints (e.g. integer, string, boolean), declare mandatory fields via `required`, and disable unknown keys via `additionalProperties: false`.
+  * **Mock Value Utility:** Every schema includes an `"examples"` key-value array showing authentic values (e.g. game build strings like `"r282108/r0 "`). The `MockValueGenerator` should read these arrays to populate properties with authentic values.
+
 ---
 
 ## 2. Parsing and Type Definition Libraries
