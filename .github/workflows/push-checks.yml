@@ -1,7 +1,8 @@
 # This workflow will:
 #
 #   * install Python dependencies
-#   * lint with a single version of Python
+#   * lint & type check with a single version of Python
+#   * run automated tests under a virtual framebuffer
 #
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
@@ -9,75 +10,47 @@ name: Push-Checks
 
 on:
   push:
-      # We'll catch issues on `develop` or any PR branch.
+    # We'll catch issues on `develop` or any PR branch.
     branches-ignore:
-        - 'main'
-        - 'stable'
-        - 'releases'
-        - 'beta'
+      - 'main'
+      - 'stable'
+      - 'releases'
+      - 'beta'
 
 jobs:
   push_checks:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v6
       with:
         fetch-depth: 0
+
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
         cache: 'pip' # caching pip dependencies
         python-version-file: '.python-version'
+
     - name: Install dependencies
       run: |
         sudo apt-get install -y xvfb
         python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-    
-    - name: Setup flake8 annotations
-      uses: rbialon/flake8-annotations@v1
-    
-    - name: Lint with flake8
-      env:
-        ROOT_SHA: ${{github.base_ref}}
-      run: |
-        DATA=$(jq --raw-output .before "$GITHUB_EVENT_PATH")
+        pip install -e .[legacy-dev,dev]
 
-        echo "DATA: ${DATA}"
-        #######################################################################
-        # stop the build if there are Python syntax errors or undefined names, ignore existing 
-        #######################################################################
-        # We need to get just the *filenames* of only *python* files changed.
-        # Using various -z/-Z/-0 to utilise NUL-terminated strings.
-        git diff --name-only --diff-filter=d -z "$DATA" | \
-          grep -E -z -Z '\.py$' | \
-          xargs -0 flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
-        #######################################################################
-          
-        #######################################################################
-        # 'Full' run, but ignoring docstring errors
-        #######################################################################
-        # explicitly ignore docstring errors (start with D)
-        # Can optionally add `--exit-zero` to the flake8 arguments so that
-        git diff --name-only --diff-filter=d -z "$DATA" | \
-          grep -E -z -Z '\.py$' | \
-          xargs -0 flake8 --count --statistics --extend-ignore D
-        #######################################################################
+    - name: Lint and Format with Ruff
+      run: |
+        ruff check --format=github .
+        ruff format --check .
 
     - name: mypy type checks
       run: |
-          ./scripts/mypy-all.sh --platform win32
+        ./scripts/mypy-all.sh --platform win32
 
     - name: translation checks
       run: |
-          python ./scripts/find_localised_strings.py --compare-lang L10n/en.template --directory . --ignore coriolis-data
+        python ./scripts/find_localised_strings.py --compare-lang L10n/en.template --directory . --ignore coriolis-data
 
-      ####################################################################
-      # Ensure all tests pass
-      ####################################################################
     - name: PyTest tests
       run: |
         xvfb-run pytest
