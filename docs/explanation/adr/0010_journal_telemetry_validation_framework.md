@@ -47,6 +47,21 @@ To scale our support for multiple journal versions, external schemas, and test p
     * `tests/data/v37/snapshots/`: Genuine, anonymized `Status.json`, `Market.json`, etc.
     * `tests/data/v37/egress/`: Sample API payloads/schemas matching what is sent to EDSM, Inara, and EDDN.
 
+```text
+data/
+└── raw/                 # (Git Ignored) Raw developer staging folder
+    ├── logs/            # Copy of un-sanitized player log files
+    ├── snapshots/       # Copy of un-sanitized JSS files (Market.json, etc.)
+    └── egress/          # Raw api outputs from external endpoints
+
+tests/
+└── data/                # (Git Tracked) Sanitized test fixtures
+    └── v37/
+        ├── logs/        # Sanitized Journal Log files (e.g. Journal.260820.01.log)
+        ├── snapshots/   # Sanitized JSS files (e.g. Market.json, Status.json)
+        └── egress/      # Expected API schema/payload mock outputs
+```
+
 ### 4.2 Telemetry Package Layout (`src/edmc/telemetry/`)
 * `parser.py`: Tailer and line parser for append-only Journal Logs.
 * `snapshots.py`: Parser for dynamic Journal State Snapshots (JSS).
@@ -66,6 +81,15 @@ src/edmc/
 ### 4.3 Dual-Severity Validation Logic
 * **Strict Mode (Testing Pipeline):** When executing tests using our public `edmc.testing` mock SDK, the validator runs with strict error propagation. Any schema violation (such as type mismatches or missing required keys) immediately raises a `ValidationError`, halting the test.
 * **Lenient Mode (Production/Run Pipeline):** During live gameplay execution, the telemetry ingestion pipeline runs the validator in warning-only mode. If the game client writes an unexpected key or changes a type signature, EDMC will log a warning to the diagnostic files but continue parsing and transmitting the remaining valid telemetry payload.
+
+### 4.4 Sources for Raw Baseline Test Articles
+To obtain unaltered, genuine logs and JSS companion files for local staging (`data/raw/`):
+1. **Local System Installation:** Copy files directly from the game client's active directory. On Linux, this resides in:
+   `~/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/`
+2. **EDDiscovery GitHub Repository:** Contains a suite of real player logs representing complex gameplay scenarios:
+   * [EDDiscovery GitHub Repository](https://github.com/EDDiscovery/EDDiscovery) (Search in `EDDiscoveryTests/` or test folders).
+3. **EDCD EDDI GitHub Repository:** Contains test logs and snapshot assets:
+   * [EDCD EDDI GitHub Repository](https://github.com/EDCD/EDDI) (Search in the `Tests/` directory).
 
 ---
 
