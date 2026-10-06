@@ -42,4 +42,6 @@ related_rfcs: []
 
 ## 3. Registered Designs
 
-*(No design documents registered yet).*
+| ID | Title | Status | Date | Related ADRs |
+| :---: | :--- | :---: | :---: | :--- |
+| **SDD-001** | [SDD-001: Hexagonal Architecture Core and Multi-Adapter Topology](0001_hexagonal_architecture_and_adapter_topology.md) | **draft** | 2026-10-06 | [ADR 0001](../adr/0001_hexagonal_architecture_and_multi_adapter_interfaces.md) |
