@@ -24,3 +24,4 @@ Governed by Markdown Architectural Decision Records (MADR 3.0).
 | Index | Title | Status | Date | Supersedes |
 | :---: | :--- | :---: | :---: | :--- |
 | **0001** | [ADR 0001: Hexagonal Architecture, Multi-Adapter Interfaces, and CI/CD Testing Modernization](0001_hexagonal_architecture_and_multi_adapter_interfaces.md) | **Accepted** | 2026-10-06 | — |
+| **0002** | [ADR 0002: Modernize Packaging, Streamline CI Workflows, and Partition Test Suite](0002_modernize_packaging_workflows_and_partition_tests.md) | **Proposed** | 2026-10-06 | — |
