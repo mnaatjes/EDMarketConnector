@@ -1,25 +1,116 @@
-[tool.autopep8]
-max_line_length = 120
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edmarketconnector"
+version = "6.1.3"
+description = "Elite Dangerous Market Connector"
+readme = "README.md"
+authors = [{ name = "EDCD", email = "edmc@edcd.io" }]
+license = { text = "GPL-2.0-or-later" }
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31.0",
+    "pillow>=10.0.0",
+    "watchdog>=3.0.0",
+    "semantic-version>=2.10.0",
+    "psutil>=5.9.0",
+    "tomli-w>=1.0.0",
+    "simplesystray>=0.1.0; sys_platform == 'win32'",
+    "pywin32>=306; sys_platform == 'win32'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.8.0",
+    "mypy>=1.10.0",
+    "types-requests>=2.31.0",
+]
+api = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.29.0",
+    "httpx>=0.27.0",
+]
+mcp = [
+    "mcp>=1.0.0",
+]
+
+[tool.setuptools]
+py-modules = [
+    "EDMC",
+    "EDMCLogging",
+    "EDMCSystemProfiler",
+    "EDMarketConnector",
+    "collate",
+    "commodity",
+    "common_utils",
+    "companion",
+    "constants",
+    "dashboard",
+    "edmc_data",
+    "edshipyard",
+    "journal_lock",
+    "killswitch",
+    "l10n",
+    "loadout",
+    "monitor",
+    "myNotebook",
+    "outfitting",
+    "plug",
+    "plugin_browser",
+    "prefs",
+    "protocol",
+    "shipyard",
+    "stats",
+    "td",
+    "theme",
+    "timeout_session",
+    "ttkHyperlinkLabel",
+    "update",
+    "util_ships",
+]
+packages = [
+    "config",
+    "hotkey",
+    "util",
+]
+
+[tool.setuptools.package-dir]
+"" = "."
+"edmc" = "src/edmc"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+src = ["src", "tests"]
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "docs",
+    "architecture",
+    "coriolis-data",
+    "resources",
+    "scripts",
+    "plugins",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = ["E501"]
+# Ignore legacy style warnings for root scripts during active strangler fig migration
+per-file-ignores = { "*.py" = ["I001", "B008", "E722", "F401", "F403", "F405", "B904", "B007", "E402", "B009", "B010", "B905"] }
+
 
 
 [tool.pytest.ini_options]
-testpaths = ["tests"] # Search for tests in tests/
-addopts = "--cov . --cov plugins --cov-report=term-missing --no-cov-on-fail"
-# --cov-fail-under 80"
-
-[tool.coverage.run]
-omit = [ "tests/*", "venv/*", ".venv/*", "dist.win32/*" ]
-plugins = [ "coverage_conditional_plugin" ]
-
-[tool.coverage.coverage_conditional_plugin.rules]
-# NB: The name versus content of all of these are inverted because of the way
-#     they're used.  When a pragma cites one it causes that code block to
-#     **NOT** be considered for code coverage.
-#     See Contributing.md#test-coverage for more details.
-sys-platform-win32 = "sys_platform != 'win32'"
-sys-platform-not-win32 = "sys_platform == 'win32'"
-sys-platform-darwin = "sys_platform != 'darwin'"
-sys-platform-not-darwin = "sys_platform == 'darwin'"
-sys-platform-linux = "sys_platform != 'linux'"
-sys-platform-not-linux = "sys_platform == 'linux'"
-sys-platform-not-known = "sys_platform in ('darwin', 'linux', 'win32')"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-ra --strict-markers"

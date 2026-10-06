@@ -61,3 +61,4 @@ pylint.txt
 # Ignore Submodule data directory
 coriolis-data/
 FDevIDs/
+edmarketconnector.egg-info/
