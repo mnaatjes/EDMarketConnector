@@ -45,3 +45,5 @@ related_rfcs: []
 | ID | Title | Status | Date | Related ADRs |
 | :---: | :--- | :---: | :---: | :--- |
 | **SDD-001** | [SDD-001: Hexagonal Architecture Core and Multi-Adapter Topology](0001_hexagonal_architecture_and_adapter_topology.md) | **draft** | 2026-10-06 | [ADR 0001](../adr/0001_hexagonal_architecture_and_multi_adapter_interfaces.md) |
+| **SDD-002** | [SDD-002: Packaging Modernization, Test Partitioning, and CI Pipeline Topology](0002_packaging_modernization_and_test_partitioning.md) | **completed** | 2026-10-06 | [ADR 0002](../adr/0002_modernize_packaging_workflows_and_partition_tests.md) |
+
