@@ -10,16 +10,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Session Metadata
 * **Antigravity Conversation UUID:** `c03c325a-62b8-455e-8237-de7969300127`
-* **Target Milestone:** SDD-001 Hexagonal Architecture Core and Multi-Adapter Topology
+* **Strategic Milestone:** Concluded in-depth repository audit, root directory taxonomy, and test baseline isolation. Transitioning to a dedicated, decoupled sibling repository (`ed-telemetry` / `edmc-core`) overseen from parent workspace directory `~/src/github.com/mnaatjes/` to maintain this repository as an authoritative domain reference manual.
 
 ---
 
-## [2026-10-06] - Architecture Governance & Packaging Baseline
+## [2026-10-06] - Architecture Governance, Root Audit & Packaging Baseline
 
 ### Completed
 * **Unified Process Governance:**
   * Initialized `architecture/` engineering plane adhering to UP dual-root standards (`risk/`, `use-cases/`, `adr/`, `designs/`, `rfcs/`, `api/`, `notes/`).
-  * Consolidate legacy codebase audit in [`architecture/notes/legacy_repository_audit.md`](architecture/notes/legacy_repository_audit.md).
+  * Consolidated legacy codebase audit in [`architecture/notes/legacy_repository_audit.md`](architecture/notes/legacy_repository_audit.md).
   * Cataloged all 54 root files and 11 directories in [`architecture/notes/root_directory_reference.md`](architecture/notes/root_directory_reference.md).
   * Formalized Fowler's *Extract Class* and *Encapsulate Implementation* workflow guide in [`architecture/notes/fowler_refactoring_patterns_workflow.md`](architecture/notes/fowler_refactoring_patterns_workflow.md).
 * **Decisions & Design Specifications:**
@@ -34,8 +34,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   * Integrated `xvfb` headless test execution for Tkinter components in headless CI/Linux environments.
   * Replaced sprawling PR/push workflows with a single unified matrix workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
-### In-Progress / Pending Next
-* **SDD-001 Phase 2 (Pending):** Domain Layer Extraction & Leaf Facades (typed enums in `src/edmc/domain/enums.py` and `JournalFileLock` class).
-* **SDD-001 Phase 3 (Pending):** Configuration Port & Platform Adapters (`ConfigPort`, Windows/Linux storage adapters).
-* **SDD-001 Phase 4 (Pending):** Telemetry Ingestion & In-Process EventBus (`JournalWatcherPort`, `EventBus`).
-* **SDD-001 Phase 5 (Pending):** Multi-Adapter Driving Surfaces (CLI, FastAPI REST, MCP Server, decoupled GUI view).
+### Strategic Transition
+* **Next Action:** Repository frozen as an immutable reference model. Next development session will launch from workspace root `~/src/github.com/mnaatjes/` to create and supervise the greenfield decoupled architecture project.
