@@ -1,72 +1,100 @@
-Any questions or offers of help can be directed to the EDCD Discord #edmc
-channel:
+# Elite Dangerous Market Connector (EDMC) - Architecture Modernization Fork
 
-[![Discord chat](https://img.shields.io/discord/164411426939600896.svg?style=social&label=Discord%20chat)](https://discord.gg/usQ5e6n)
+This repository is a dedicated engineering fork of the [EDCD/EDMarketConnector](https://github.com/EDCD/EDMarketConnector) application. 
 
-Elite: Dangerous Market Connector (EDMC)
-===
+The primary mission of this fork is to systematically analyze, decouple, and modernize the core software architecture—separating presentation (GUI) from business logic, formalizing domain models and ports & adapters (Hexagonal Architecture), eliminating circular dependencies, and introducing headless test harnesses—while preparing clean, modular pull requests for upstream community adoption.
 
-This application is only of use to PC players of the game Elite Dangerous
-(and its expansions).  It won't work with PS4 or Xbox accounts.
-
-It utilises the Journal files written by the game on the user's computer,
-together with data from the API Frontier Developments supplies in order to
-feed this data to various third party sites that the user may find useful.
-
-See [the Wiki documentation](https://github.com/EDCD/EDMarketConnector/wiki)
-for more details.
-
-
-Installation & Uninstall
 ---
-Please see the [Installation & Setup](https://github.com/EDCD/EDMarketConnector/wiki/Installation-&-Setup) wiki page.
 
+## 1. Architectural Governance
 
-Running from source
+All architectural analysis, engineering ledgers, decision records, and technical designs are governed by the Unified Process (UP) dual-root documentation standard:
+
+* **Engineering Plane (`architecture/`):** Authoritative Single Source of Truth (SSoT) for internal technical governance.
+  * [`architecture/README.md`](architecture/README.md): Master architecture index and directory contracts.
+  * [`architecture/notes/legacy_repository_audit.md`](architecture/notes/legacy_repository_audit.md): Complete legacy codebase audit, component roles, complexity rankings, and dead-code classifications.
+  * [`architecture/risk/risk-list.md`](architecture/risk/risk-list.md): Barry Boehm Master Risk Register ($RE = P \times I$).
+  * [`architecture/use-cases/`](architecture/use-cases/): RUP Use-Case Specifications.
+  * [`architecture/adr/`](architecture/adr/): MADR 3.0 Architectural Decision Records.
+  * [`architecture/designs/`](architecture/designs/): IEEE 1016 Software Design Documents.
+  * [`architecture/rfcs/`](architecture/rfcs/): Collaborative engineering proposals.
+  * [`architecture/api/`](architecture/api/): OpenAPI 3.1 & AsyncAPI boundary interface contracts.
+
 ---
-Please see the [Running from source](https://github.com/EDCD/EDMarketConnector/wiki/Running-from-source) wiki page.
 
+## 2. Git Branching Strategy & Workflow
 
-Plugins
+To maintain absolute compliance with open-source community standards and enable seamless upstream contribution to `EDCD/EDMarketConnector`, this repository strictly enforces the **Upstream-Tracking Fork Model**.
+
+```mermaid
+flowchart TD
+    subgraph Upstream ["Upstream Remote (EDCD/EDMarketConnector)"]
+        UP_MAIN["upstream/main (Official Release Line)"]
+    end
+
+    subgraph Fork ["Your Fork Remote (origin)"]
+        F_MAIN["main (Exact 1:1 Mirror)"]
+        F_DEV["develop (Modernization Integration Trunk)"]
+        F_FEAT["feature/<topic> (Isolated Work Branches)"]
+    end
+
+    UP_MAIN -->|git fetch upstream| F_MAIN
+    F_MAIN -->|Branch Base| F_DEV
+    F_DEV -->|Branch| F_FEAT
+    F_FEAT -->|PR / Merge| F_DEV
+    F_FEAT -.->|Contribution PR| UP_MAIN
+```
+
+### 2.1 Branch Taxonomy
+
+* **`main` (Pristine Upstream Mirror):**
+  * Tracks `upstream/main` (`EDCD/EDMarketConnector`) in lockstep.
+  * Contains **zero** custom commits, zero architectural notes, and zero personal modifications.
+  * Updated exclusively via fast-forward merges from `upstream/main`.
+* **`develop` (Active Integration Trunk):**
+  * The primary baseline for fork modernization.
+  * Hosts the `architecture/` governance framework, consolidated ledgers, and verified integrated components.
+* **`feature/<topic>` (Isolated Work Branches):**
+  * Short-lived branches spawned off `develop` to address discrete, bounded milestones (e.g. `feature/config-decoupling`, `feature/mock-journal-emitter`).
+  * Merged back into `develop` once completed and verified.
+  * Used as the source branch when opening targeted Pull Requests to official `EDCD`.
+
 ---
-Plugins extend the behaviour of this app. See the [Plugins](https://github.com/EDCD/EDMarketConnector/wiki/Plugins) wiki page for more information.
 
-If you would like to write a plugin please see [PLUGINS.md](PLUGINS.md).
+## 3. Operational Rules & Prohibitions
 
+### 3.1 Strict Prohibitions
+1. **Never commit directly to `main`:** `main` must never carry custom application code or merge artifacts. Committing to `main` breaks clean upstream diff tracking.
+2. **Never rebase or force-push `main` against anything other than `upstream/main`:** The local and origin `main` branches must remain exact mirrors of the official EDCD repository.
+3. **Never open monolithic upstream Pull Requests:** Never propose merging `develop` as a single, multi-thousand-line PR to upstream. Upstream contributions must be submitted as isolated, atomic feature branches designed for specific bug fixes or structural enhancements.
+4. **Never bypass architecture verification:** No non-trivial subsystem may be modified or introduced without an approved design in `architecture/designs/` or record in `architecture/adr/`.
 
-Troubleshooting
+### 3.2 Upstream Synchronization Protocol
+
+To ingest upstream updates into your local environment:
+
+```bash
+# 1. Fetch official upstream changes
+git checkout main
+git fetch upstream
+
+# 2. Fast-forward local main to match upstream exactly
+git merge upstream/main --ff-only
+
+# 3. Push pristine main to your GitHub remote
+git push origin main
+
+# 4. Ingest upstream changes into the development trunk
+git checkout develop
+git merge main
+git push origin develop
+```
+
 ---
-Please see the [Troubleshooting](https://github.com/EDCD/EDMarketConnector/wiki/Troubleshooting) wiki page.
 
+## 4. Upstream Project Reference
 
-Reporting a problem
----
-Please report a problem as a new GitHub [issue](https://github.com/EDCD/EDMarketConnector/issues/new?assignees=&labels=bug%2C+unconfirmed&template=bug_report.md&title=).
-See [Reporting a problem](https://github.com/EDCD/EDMarketConnector/wiki/Troubleshooting#reporting-a-problem)
-for further guidance, including how to find the necessary log files to 
-attach to the report.
-
-Packaging for distribution
---------
-Please see [docs/Releasing.md](docs/Releasing.md).
-
-Disclaimer
---------
-This app uses the “Companion” web API that Frontier originally supplied for
-their Elite Dangerous iOS app and now [support](https://forums.frontier.co.uk/threads/open-letter-to-frontier-developments.218658/page-19#post-3371472)
-for third-party apps. If that API ceases to function in the future then
-much of this application's functionality will be curtailed (although it
-could still utilise [Journal files](https://forums.frontier.co.uk/threads/commanders-log-manual-and-data-sample.275151/#post4562494)).
-
-
-
-
-Acknowledgements
---------
-Please see the [Acknowledgements](https://github.com/EDCD/EDMarketConnector/blob/main/docs/Acknowledgements%20and%20License.md) wiki page.
-
-License
--------
-Copyright © 2015-2019 Jonathan Harris, 2020-2024 EDCD
-
-Licensed under the [GNU Public License (GPL)](http://www.gnu.org/licenses/gpl-2.0.html) version 2 or later.
+For upstream user documentation, installation guides, plugin authoring tutorials, and issue tracking, consult:
+* Upstream Repository: [EDCD/EDMarketConnector](https://github.com/EDCD/EDMarketConnector)
+* Upstream Documentation Wiki: [EDCD Wiki](https://github.com/EDCD/EDMarketConnector/wiki)
+* Upstream Discord: [#edmc on EDCD Discord](https://discord.gg/usQ5e6n)
