@@ -22,5 +22,5 @@ Governed by Markdown Architectural Decision Records (MADR 3.0).
 ## 2. Decision Log
 
 | Index | Title | Status | Date | Supersedes |
-| :--- | :--- | :---: | :---: | :--- |
-| *(None)* | *Awaiting first formal record* | — | — | — |
+| :---: | :--- | :---: | :---: | :--- |
+| **0001** | [ADR 0001: Hexagonal Architecture, Multi-Adapter Interfaces, and CI/CD Testing Modernization](0001_hexagonal_architecture_and_multi_adapter_interfaces.md) | **Accepted** | 2026-10-06 | — |
